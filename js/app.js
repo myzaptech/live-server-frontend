@@ -29,24 +29,16 @@ class StreamPlayer {
     // Cargar información del servidor
     await this.loadServerInfo();
     
-    // Verificar estado inicial
-    const isLive = await this.checkStreamStatus();
+    // Verificar estado inicial (esto ya auto-cargará si está en vivo)
+    await this.checkStreamStatus();
     
     // Configurar event listeners
     this.setupEventListeners();
     
-    // Iniciar polling de estado
+    // Iniciar polling de estado (revisará cada 3 segundos)
     this.startStatusPolling();
     
-    // ✨ AUTO-CARGAR STREAM SI ESTÁ EN VIVO
-    if (isLive) {
-      UI.addLog('🎬 Stream detectado, cargando automáticamente...', 'info');
-      setTimeout(() => {
-        this.loadStream();
-      }, 1000); // Pequeño delay para que se vea el mensaje
-    }
-    
-    UI.addLog('✅ Sistema listo', 'success');
+    UI.addLog('✅ Sistema listo - Monitoreando stream automáticamente', 'success');
   }
   
   /**
@@ -103,8 +95,20 @@ class StreamPlayer {
         // Si está en vivo, cargar URL del stream
         if (isLive) {
           await this.loadStreamUrl();
+          
+          // ✨ AUTO-CARGAR: Si está en vivo y NO se está reproduciendo, cargar automáticamente
+          if (!this.isPlaying && this.video.paused) {
+            UI.addLog('🎬 Stream en vivo detectado, cargando automáticamente...', 'info');
+            this.loadStream();
+          }
         } else {
           UI.updateStreamUrlInfo(null);
+          
+          // Si el stream se detuvo, limpiar el reproductor
+          if (this.isPlaying) {
+            UI.addLog('📴 Stream detenido', 'warning');
+            this.stopStream();
+          }
         }
         
         return isLive;
