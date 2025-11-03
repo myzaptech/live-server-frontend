@@ -30,13 +30,21 @@ class StreamPlayer {
     await this.loadServerInfo();
     
     // Verificar estado inicial
-    await this.checkStreamStatus();
+    const isLive = await this.checkStreamStatus();
     
     // Configurar event listeners
     this.setupEventListeners();
     
     // Iniciar polling de estado
     this.startStatusPolling();
+    
+    // ✨ AUTO-CARGAR STREAM SI ESTÁ EN VIVO
+    if (isLive) {
+      UI.addLog('🎬 Stream detectado, cargando automáticamente...', 'info');
+      setTimeout(() => {
+        this.loadStream();
+      }, 1000); // Pequeño delay para que se vea el mensaje
+    }
     
     UI.addLog('✅ Sistema listo', 'success');
   }

@@ -1,0 +1,15 @@
+# Comandos para actualizar en producción manteniendo cambios locales
+
+# Opción 1: Commit los cambios locales en producción (Recomendado)
+git add js/config.js js/config.production.js
+git commit -m "Update production config with https URLs"
+git pull
+
+# Opción 2: Usar los cambios del servidor (sobrescribe locales)
+git checkout -- js/config.js js/config.production.js
+git pull
+
+# Opción 3: Stash y aplicar después
+git stash
+git pull
+git stash pop
