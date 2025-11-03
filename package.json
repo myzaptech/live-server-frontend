@@ -1,0 +1,28 @@
+{
+  "name": "live-stream-frontend",
+  "version": "1.0.0",
+  "description": "Frontend web para visualizar transmisiones en vivo RTMP/HLS",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx live-server --port=8080 --no-browser",
+    "dev": "npx live-server --port=8080",
+    "serve": "python -m http.server 8080"
+  },
+  "keywords": [
+    "streaming",
+    "hls",
+    "rtmp",
+    "live",
+    "video",
+    "frontend"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}

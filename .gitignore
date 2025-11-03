@@ -1,0 +1,10 @@
+# Archivos a ignorar
+node_modules/
+.DS_Store
+*.log
+.env
+.vscode/
+*.swp
+*.swo
+*~
+.idea/

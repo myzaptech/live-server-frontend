@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Plataforma de streaming en vivo - Transmisiones HLS">
+  <title>🎥 Live Stream - Transmisión en Vivo</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎥</text></svg>">
+  
+  <!-- HLS.js Library -->
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  
+  <!-- Font Awesome para iconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Estilos -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <div class="logo">
+          <i class="fas fa-video"></i>
+          <span>LiveStream</span>
+        </div>
+        <nav class="nav">
+          <a href="#player" class="nav-link active">
+            <i class="fas fa-play-circle"></i> Reproductor
+          </a>
+          <a href="#stats" class="nav-link">
+            <i class="fas fa-chart-line"></i> Estadísticas
+          </a>
+          <a href="#about" class="nav-link">
+            <i class="fas fa-info-circle"></i> Información
+          </a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main">
+    <div class="container">
+      
+      <!-- Stream Status Banner -->
+      <div class="status-banner" id="statusBanner">
+        <div class="status-indicator" id="statusIndicator">
+          <span class="status-dot"></span>
+          <span class="status-text">Verificando estado...</span>
+        </div>
+        <div class="viewer-count" id="viewerCount">
+          <i class="fas fa-users"></i>
+          <span>0 espectadores</span>
+        </div>
+      </div>
+
+      <!-- Video Player Section -->
+      <section class="player-section" id="player">
+        <div class="player-container">
+          <video 
+            id="videoPlayer" 
+            class="video-player" 
+            controls 
+            playsinline
+            poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1920' height='1080' viewBox='0 0 1920 1080'%3E%3Crect fill='%23000' width='1920' height='1080'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%23888' font-family='Arial' font-size='48'%3E%F0%9F%93%BA Sin transmisión activa%3C/text%3E%3C/svg%3E"
+          ></video>
+          
+          <!-- Overlay cuando no hay stream -->
+          <div class="player-overlay" id="playerOverlay">
+            <div class="overlay-content">
+              <i class="fas fa-video-slash overlay-icon"></i>
+              <h2>No hay transmisión activa</h2>
+              <p>Espera a que inicie el stream o haz clic en el botón para cargar</p>
+              <button class="btn btn-primary btn-lg" id="loadStreamBtn">
+                <i class="fas fa-play"></i> Cargar Stream
+              </button>
+            </div>
+          </div>
+
+          <!-- Loading Spinner -->
+          <div class="loading-spinner" id="loadingSpinner">
+            <div class="spinner"></div>
+            <p>Cargando stream...</p>
+          </div>
+        </div>
+
+        <!-- Player Controls -->
+        <div class="player-controls">
+          <button class="btn btn-success" id="btnLoadStream">
+            <i class="fas fa-play"></i> Cargar Stream
+          </button>
+          <button class="btn btn-danger" id="btnStopStream">
+            <i class="fas fa-stop"></i> Detener
+          </button>
+          <button class="btn btn-info" id="btnRefreshStats">
+            <i class="fas fa-sync-alt"></i> Actualizar
+          </button>
+          <button class="btn btn-secondary" id="btnFullscreen">
+            <i class="fas fa-expand"></i> Pantalla Completa
+          </button>
+        </div>
+      </section>
+
+      <!-- Statistics Section -->
+      <section class="stats-section" id="stats">
+        <h2 class="section-title">
+          <i class="fas fa-chart-bar"></i> Estadísticas en Tiempo Real
+        </h2>
+        
+        <div class="stats-grid">
+          <!-- Bitrate -->
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-signal"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Bitrate</div>
+              <div class="stat-value" id="statBitrate">-- Kbps</div>
+            </div>
+          </div>
+
+          <!-- Resolución -->
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-desktop"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Resolución</div>
+              <div class="stat-value" id="statResolution">--x--</div>
+            </div>
+          </div>
+
+          <!-- FPS -->
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-film"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">FPS</div>
+              <div class="stat-value" id="statFps">--</div>
+            </div>
+          </div>
+
+          <!-- Codec -->
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-code"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Codec</div>
+              <div class="stat-value" id="statCodec">--</div>
+            </div>
+          </div>
+
+          <!-- Uptime -->
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Tiempo en vivo</div>
+              <div class="stat-value" id="statUptime">--:--:--</div>
+            </div>
+          </div>
+
+          <!-- Viewers -->
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Espectadores</div>
+              <div class="stat-value" id="statViewers">0</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Stream Info Section -->
+      <section class="info-section" id="about">
+        <h2 class="section-title">
+          <i class="fas fa-info-circle"></i> Información del Stream
+        </h2>
+        
+        <div class="info-grid">
+          <div class="info-card">
+            <h3><i class="fas fa-server"></i> Estado del Servidor</h3>
+            <div class="info-content" id="serverInfo">
+              <p class="loading-text">Cargando información...</p>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <h3><i class="fas fa-link"></i> URL del Stream</h3>
+            <div class="info-content" id="streamUrlInfo">
+              <p class="loading-text">Esperando stream activo...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Activity Log -->
+      <section class="log-section">
+        <h2 class="section-title">
+          <i class="fas fa-list"></i> Registro de Actividad
+        </h2>
+        <div class="log-container" id="logContainer">
+          <!-- Los logs se añadirán dinámicamente aquí -->
+        </div>
+        <button class="btn btn-secondary btn-sm" id="btnClearLog">
+          <i class="fas fa-trash"></i> Limpiar Log
+        </button>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 LiveStream Platform. Creado con Node.js, Express y HLS.js</p>
+      <div class="footer-links">
+        <a href="https://github.com/video-dev/hls.js/" target="_blank">
+          <i class="fab fa-github"></i> HLS.js
+        </a>
+        <a href="#" id="apiDocsLink">
+          <i class="fas fa-book"></i> API Docs
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notifications -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+  
+</body>
+</html>
