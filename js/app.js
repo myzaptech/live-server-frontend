@@ -143,14 +143,8 @@ class StreamPlayer {
         return;
       }
       
-      // Obtener URL del stream
-      const urlResponse = await API.getStreamUrl();
-      
-      if (!urlResponse.success) {
-        throw new Error('No se pudo obtener la URL del stream');
-      }
-      
-      const streamUrl = urlResponse.data.hlsUrl;
+      // Usar URL del stream desde CONFIG (no del backend)
+      const streamUrl = CONFIG.HLS_URL;
       UI.addLog(`📺 URL del stream: ${streamUrl}`, 'info');
       
       // Verificar soporte de HLS

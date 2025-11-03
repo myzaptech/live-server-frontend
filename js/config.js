@@ -8,15 +8,15 @@
  */
 
 const CONFIG = {
-  // URL base de la API del servidor
-  API_BASE_URL: 'http://localhost:3000',
+  // URL base de la API del servidor (SIN barra final)
+  API_BASE_URL: 'https://myzaptech.site',
   
-  // URL base del servidor de medios (HLS)
-  MEDIA_BASE_URL: 'http://localhost:8000',
+  // URL base del servidor de medios (HLS) (SIN barra final)
+  MEDIA_BASE_URL: 'https://myzaptech.site',
   
   // Stream key por defecto
   STREAM_KEY: 'live',
-  
+
   // Intervalo de actualización de estadísticas (milisegundos)
   STATS_UPDATE_INTERVAL: 5000, // 5 segundos
   
@@ -45,7 +45,7 @@ const CONFIG = {
   MAX_LOG_ENTRIES: 50,
   
   // Habilitar modo debug
-  DEBUG_MODE: true
+  DEBUG_MODE: false
 };
 
 // No modificar - construir URLs completas

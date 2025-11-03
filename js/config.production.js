@@ -10,11 +10,11 @@
 const CONFIG = {
   // URL base de la API del servidor
   // Cambia esto por tu dominio o IP del droplet
-  API_BASE_URL: 'http://tu-dominio.com',  // Ejemplo: http://streaming.midominio.com o http://192.168.1.100
+  API_BASE_URL: 'https://myzaptech.site',  // Con HTTPS ya que tienes SSL configurado
   
   // URL base del servidor de medios (HLS)
   // Si usas Nginx, usa la misma URL que la API
-  MEDIA_BASE_URL: 'http://tu-dominio.com',
+  MEDIA_BASE_URL: 'https://myzaptech.site',
   
   // Stream key por defecto
   STREAM_KEY: 'live',
